@@ -6,6 +6,8 @@ import javafx.scene.control.*;
 import outils.Fichier;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -75,8 +77,23 @@ public class EMailController implements Initializable {
      */
     @FXML
     public void onOpenClick() {
-        confNewMess("Voulez vous ouvrir un nouveau message ?");
-
+        String nomFichier;
+        if (confNewMess("Voulez vous ouvrir un nouveau message ?")) {
+            try {
+                JFileChooser chooser = new JFileChooser();
+                FileNameExtensionFilter filter = new FileNameExtensionFilter(
+                        "txt texte", "txt");
+                chooser.setCurrentDirectory(new File("msg"));
+                chooser.setFileFilter(filter);
+                chooser.showDialog(null, "ok");
+                nomFichier = chooser.getSelectedFile().getPath();
+                Fichier fichier = new Fichier(nomFichier);
+                
+                txtMail.setText(fichier.getContenu());
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+        }
     }
 
     /**
@@ -107,7 +124,7 @@ public class EMailController implements Initializable {
      */
     @FXML
     public void onSendClick() {
-        String nomFichier = "msg1.txt";
+        String nomFichier = "msg/" + txtSujet.getText() + ".txt";
         Fichier fichier = new Fichier(nomFichier);
         String mess = "";
         if (cbxAdrMail.getValue() != null
@@ -115,13 +132,15 @@ public class EMailController implements Initializable {
             if (!cbxAdrMail.getItems().contains(cbxAdrMail.getValue())) {
                 cbxAdrMail.getItems().add(cbxAdrMail.getValue());
                 enregistrerAdresses(cbxAdrMail.getItems(), "adressesmail.csv");
-                mess += String.format("to : %s%nfrom : %s%nSujet : %s%n%n%s",
-                        cbxAdrMail.getValue(),
-                        "you",
-                        txtSujet.getText(),
-                        txtMail.getText());
-                fichier.setContenu(mess);
             }
+
+            mess += String.format("to : %s%nfrom : %s%nSujet : %s%n%n%s",
+                    cbxAdrMail.getValue(),
+                    "you",
+                    txtSujet.getText(),
+                    txtMail.getText());
+            System.out.println(mess);
+            fichier.setContenu(mess);
             JOptionPane.showMessageDialog(null,
                     "mail envoyé a : " + cbxAdrMail.getValue(),
                     "mail envoyé",
