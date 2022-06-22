@@ -12,12 +12,14 @@ import java.util.ArrayList;
 public class LecteurFichierAdresse {
     /**
      * Enregistrer adresses.
-     * on enregistre les adresses dans un fichier dont le nom est donné en entrée
+     * on enregistre les adresses dans un fichier
+     * dont le nom est donné en entrée.
      *
      * @param adresses   the adresses
      * @param nomFichier the nom fichier
      */
-    public static void enregistrerAdresses(ObservableList adresses, String nomFichier) {
+    public static void enregistrerAdresses(final ObservableList adresses,
+                                           final String nomFichier) {
         try {
             String add = "";
             FileWriter fileWriter = new FileWriter(nomFichier);
@@ -33,9 +35,11 @@ public class LecteurFichierAdresse {
     }
 
     /**
-     * Recupère les adresses dans le fichier donné en entrer et les renvoies dans une array list.
+     * Recupère les adresses dans le fichier donné en entrer .
+     * et les renvoies dans une array list.
      * ouverture d'un reader sur le fichier dont le nom est entrer en parametre
-     * on lit chaque ligne dans le reader et pour chaque ligne on ajoute une adresse mail dans l'ArrayList
+     * on lit chaque ligne dans le reader et pour chaque ligne
+     * on ajoute une adresse mail dans l'ArrayList
      * on recupere les NullPointerException (si le nom donné en parametre n'existe pas)
      * pour afficher en popup le fait qu'on ne point nulpart
      * on recupere les FileNotFoundException (si le fichier donné en parametre n'existe pas)
@@ -45,10 +49,11 @@ public class LecteurFichierAdresse {
      * @param nomFichier the nom fichier
      * @return the array list
      */
-    public static ArrayList recupAdresses(String nomFichier) {
+    public static ArrayList recupAdresses(final String nomFichier) {
         try {
             FileReader fileReader = new FileReader(nomFichier);
-            LineNumberReader lineNumberReader = new LineNumberReader(fileReader);
+            LineNumberReader lineNumberReader
+                    = new LineNumberReader(fileReader);
             String texte = "";
             String ligneLue;
             ArrayList<String> lstCombo = new ArrayList<>();

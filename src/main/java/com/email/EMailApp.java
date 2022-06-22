@@ -1,17 +1,13 @@
 package com.email;
 
 import javafx.application.Application;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
 
-import javax.swing.*;
 import java.io.IOException;
 
-import static outils.controlAction.exitApp;
+import static outils.ControlAction.exitApp;
 
 /**
  * The type E mail app.
@@ -27,14 +23,15 @@ public class EMailApp extends Application {
     }
 
     /**
-     * lancement de l'interface
+     * lancement de l'interface.
      *
      * @param stage
      */
 
     @Override
-    public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(EMailApp.class.getResource("EMail.fxml"));
+    public void start(final Stage stage) throws IOException {
+        FXMLLoader fxmlLoader
+                = new FXMLLoader(EMailApp.class.getResource("EMail.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 900, 300);
         stage.setOnCloseRequest(event -> {
             event.consume();
