@@ -1,5 +1,9 @@
 package com.email;
 
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
+import javafx.beans.binding.Bindings;
+import javafx.beans.value.ObservableBooleanValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -90,7 +94,7 @@ public class EMailController implements Initializable {
                 enregistrerAdresses(cbxAdrMail.getItems(), "adressesmail.csv");
             }
             JOptionPane.showMessageDialog(null,
-                    "mail envoyé a :" + cbxAdrMail.getValue(),
+                    "mail envoyé a : " + cbxAdrMail.getValue(),
                     "mail envoyé",
                     JOptionPane.INFORMATION_MESSAGE);
         }
@@ -109,10 +113,15 @@ public class EMailController implements Initializable {
     /**
      * initialise les paramètre de l'interface graphique.
      * ajout des adresse se trouvant le fichier d'adresse mail
+     * intitialise l'ecouteur du bouton send sur les champ txtSujet, txtMail et cbxAdrMail
      */
     private void init() {
         ArrayList ajou = recupAdresses("adressesmail.csv");
         cbxAdrMail.getItems().addAll(ajou);
+        btnSend.disableProperty().bind(txtMail.textProperty().isEmpty()
+                                               .or(txtSujet.textProperty().isEmpty())
+                                               .or(cbxAdrMail.valueProperty().isNull()));
+
     }
 
 }
