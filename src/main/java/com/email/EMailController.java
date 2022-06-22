@@ -7,14 +7,16 @@ import javafx.beans.value.ObservableBooleanValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import outils.controlAction;
 
 import javax.swing.*;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
-import static outils.LecteurFichierAdresse.enregistrerAdresses;
-import static outils.LecteurFichierAdresse.recupAdresses;
+import static outils.controlAction.*;
+
+import static outils.LecteurFichierAdresse.*;
 
 /**
  * The type E mail controller.
@@ -54,6 +56,15 @@ public class EMailController implements Initializable {
     private Button btnOpen;
 
     /**
+     * On quitclick.
+     * quit le programme quand on click
+     */
+    @FXML
+    public void onQuitclick() {
+        exitApp();
+    }
+
+    /**
      * On new click.
      */
     @FXML
@@ -61,6 +72,7 @@ public class EMailController implements Initializable {
         txtSujet.setText("");
         cbxAdrMail.setValue("");
         txtMail.setText("");
+//        demandeConfirmation("Voulez vous créer un nouveau message ?");
     }
 
     /**
@@ -68,16 +80,8 @@ public class EMailController implements Initializable {
      */
     @FXML
     public void onOpenClick() {
+//        demandeConfirmation("Voulez vous ouvrir un nouveau message ?");
 
-    }
-
-    /**
-     * On quitclick.
-     * quit le programme quand on click
-     */
-    @FXML
-    public void onQuitclick() {
-        System.exit(0);
     }
 
     /**
