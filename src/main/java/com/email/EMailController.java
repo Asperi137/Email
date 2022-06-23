@@ -16,6 +16,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
+import static outils.ControlAction.isValiEmail;
 import static outils.LecteurFichierAdresse.enregistrerAdresses;
 import static outils.LecteurFichierAdresse.recupAdresses;
 import static outils.ControlAction.exitApp;
@@ -134,31 +135,35 @@ public class EMailController implements Initializable {
      */
     @FXML
     public void onSendClick() {
-        String adr = cbxAdrMail.getValue().toString().trim().replaceAll(" ", "_");
-        String chemin = String.format("msg/%s", adr).replaceAll(" ", "_");
-        String nomFichier = String.format("%s/%s.txt", chemin, txtSujet.getText().trim()).replaceAll(" ", "_");
-        Fichier fichier;
-        String mess = "";
-        mess += String.format(txtMail.getText());
-        if (!cbxAdrMail.getItems().contains(adr)) {
-            cbxAdrMail.getItems().add(adr);
-            enregistrerAdresses(cbxAdrMail.getItems(), "adressesmail.csv");
-        }
-        try {
 
-            Path path = Paths.get(chemin);
-            Files.createDirectories(path);
-        } catch (Exception e) {
-            System.out.println(" probleme " + e.getCause());
-        }
-        fichier = new Fichier(nomFichier);
-        fichier.setContenu(mess);
+        String adr = cbxAdrMail.getValue().toString().trim();
+        if (isValiEmail(adr)) {
+            String chemin = String.format("msg/%s", adr).replace(" ", "_");
+            String nomFichier = String.format("%s/%s.txt", chemin, txtSujet.getText().trim()).replace(" ", "_");
+            Fichier fichier;
+            String mess = "";
+            mess += String.format(txtMail.getText());
+            if (!cbxAdrMail.getItems().contains(adr)) {
+                cbxAdrMail.getItems().add(adr);
+                enregistrerAdresses(cbxAdrMail.getItems(), "adressesmail.csv");
+            }
+            try {
+                Path path = Paths.get(chemin);
+                Files.createDirectories(path);
+            } catch (Exception e) {
+                System.out.println(" probleme " + e.getCause());
+            }
+            fichier = new Fichier(nomFichier);
+            fichier.setContenu(mess);
 
-        JOptionPane.showMessageDialog(null,
-                "mail envoyé a : " + cbxAdrMail.getValue(),
-                "mail envoyé",
-                JOptionPane.INFORMATION_MESSAGE);
-
+            JOptionPane.showMessageDialog(null,
+                    "mail envoyé a : " + cbxAdrMail.getValue(),
+                    "mail envoyé",
+                    JOptionPane.INFORMATION_MESSAGE);
+        } else JOptionPane.showMessageDialog(null,
+                adr + " n'est pas une adresse mail Valide",
+                "Vérifiez l'adresse mail ",
+                JOptionPane.WARNING_MESSAGE);
     }
 
     /**
@@ -177,7 +182,7 @@ public class EMailController implements Initializable {
      * sur les champ txtSujet, txtMail et cbxAdrMail
      */
     private void init() {
-        ArrayList ajou = recupAdresses("adressesmail.csv");
+        ArrayList<String> ajou = recupAdresses("adressesmail.csv");
         cbxAdrMail.getItems().addAll(ajou);
         btnSend.disableProperty().bind(txtMail.textProperty().isEmpty()
                                                .or(txtSujet.textProperty().isEmpty())
