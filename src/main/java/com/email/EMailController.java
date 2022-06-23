@@ -1,8 +1,11 @@
 package com.email;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.stage.Stage;
 import outils.Fichier;
 
 import javax.swing.*;
@@ -16,10 +19,10 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
+import static outils.ControlAction.exitApp;
 import static outils.ControlAction.isValiEmail;
 import static outils.LecteurFichierAdresse.enregistrerAdresses;
 import static outils.LecteurFichierAdresse.recupAdresses;
-import static outils.ControlAction.exitApp;
 
 /**
  * The type E mail controller.
@@ -56,6 +59,8 @@ public class EMailController implements Initializable {
      */
     @FXML
     private Button btnOpen;
+    @FXML
+    private MenuItem menParam;
 
     /**
      * On quitclick.
@@ -94,10 +99,10 @@ public class EMailController implements Initializable {
                 nomFichier = chooser.getSelectedFile().getPath();
                 Fichier fichier = new Fichier(nomFichier);
 
-                String sujet = chooser.getSelectedFile().getName().replace(".txt", "");
+                String sujet = chooser.getSelectedFile().getName().replace(".txt", "").replace("_", " ");
                 String absolutpath = chooser.getSelectedFile().getParent();
                 String adr = absolutpath.substring((absolutpath.lastIndexOf(File.separator) + 1));
-                txtSujet.setText("Re " + sujet);
+                txtSujet.setText(String.format("Re %s", sujet));
                 cbxAdrMail.setValue(adr);
                 txtMail.setText(fichier.getContenu());
             } catch (Exception e) {
@@ -107,7 +112,7 @@ public class EMailController implements Initializable {
     }
 
     /**
-     * demande la confiirmation si un nouveau message peut effacer l'ancien.
+     * demande la confirmation si un nouveau message peut effacer l'ancien.
      *
      * @param s le message a afficher pour la confirmation
      * @return boolean de confirmation
@@ -190,4 +195,20 @@ public class EMailController implements Initializable {
 
     }
 
+    @FXML
+    public void onMenuParamClick() {
+        try {
+            FXMLLoader fxmlLoader
+                    = new FXMLLoader(EMailApp.class.getResource("Param.fxml"));
+            Scene scene = null;
+            scene = new Scene(fxmlLoader.load(), 630, 150);
+            Stage stage = new Stage();
+            stage.setTitle("Paramètre");
+            stage.setScene(scene);
+            stage.setResizable(false);
+            stage.show();
+        } catch (IOException e) {
+            System.out.println("Parametre introuvable !!!");
+        }
+    }
 }
