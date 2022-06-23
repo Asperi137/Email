@@ -3,6 +3,9 @@ package outils;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 public class Fichier {
@@ -12,8 +15,8 @@ public class Fichier {
         try {
             File fichier = new File(nomFichierV);
             fichier.createNewFile();
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
+        } catch (Exception e) {
+            System.out.println(e.getMessage() + e.getCause());
         }
         this.nomFichier = nomFichierV;
     }

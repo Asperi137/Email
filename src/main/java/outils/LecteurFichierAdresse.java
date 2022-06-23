@@ -24,7 +24,7 @@ public class LecteurFichierAdresse {
             String add = "";
             FileWriter fileWriter = new FileWriter(nomFichier);
             for (int i = 0; i < adresses.size(); i++) {
-                add += adresses.get(i) + " \n";
+                add += adresses.get(i) + "\n";
             }
             fileWriter.write(add);
             fileWriter.close();
@@ -63,9 +63,7 @@ public class LecteurFichierAdresse {
                     lstCombo.add(ligneLue);
                     texte += ligneLue + "\n";
                 }
-                if (texte == "") {
-                    throw new IOException("fichier vide");
-                }
+
             } while (ligneLue != null);
             return lstCombo;
         } catch (NullPointerException npe) {

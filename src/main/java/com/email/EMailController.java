@@ -8,7 +8,11 @@ import outils.Fichier;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
@@ -66,7 +70,7 @@ public class EMailController implements Initializable {
      */
     @FXML
     public void onNewClick() {
-        if (confNewMess("Voulez vous créer un nouveau message ?")) {
+        if (confirmNewMess("Voulez vous créer un nouveau message ?")) {
             txtSujet.setText("");
             txtMail.setText("");
         }
@@ -78,17 +82,22 @@ public class EMailController implements Initializable {
     @FXML
     public void onOpenClick() {
         String nomFichier;
-        if (confNewMess("Voulez vous ouvrir un nouveau message ?")) {
+        if (confirmNewMess("Voulez vous ouvrir un nouveau message ?")) {
             try {
                 JFileChooser chooser = new JFileChooser();
                 FileNameExtensionFilter filter = new FileNameExtensionFilter(
-                        "txt texte", "txt");
+                        "csv ou txt", "csv", "txt");
                 chooser.setCurrentDirectory(new File("msg"));
                 chooser.setFileFilter(filter);
                 chooser.showDialog(null, "ok");
                 nomFichier = chooser.getSelectedFile().getPath();
                 Fichier fichier = new Fichier(nomFichier);
-                
+
+                String sujet = chooser.getSelectedFile().getName().replace(".txt", "");
+                String absolutpath = chooser.getSelectedFile().getParent();
+                String adr = absolutpath.substring((absolutpath.lastIndexOf(File.separator) + 1));
+                txtSujet.setText("Re " + sujet);
+                cbxAdrMail.setValue(adr);
                 txtMail.setText(fichier.getContenu());
             } catch (Exception e) {
                 System.out.println(e.getMessage());
@@ -102,7 +111,7 @@ public class EMailController implements Initializable {
      * @param s le message a afficher pour la confirmation
      * @return boolean de confirmation
      */
-    private boolean confNewMess(final String s) {
+    private boolean confirmNewMess(final String s) {
         if (!txtMail.getText().isBlank() || !txtSujet.getText().isBlank()) {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle(s);
@@ -118,34 +127,37 @@ public class EMailController implements Initializable {
     /**
      * On send click.
      * si les champ necessaire sont remplie envoie le mail
-     * (simple popup disant que le mail a ete envoyer pour le moment)
+     * (creation d'un fichier dont le nom est le sujet et
+     * le dossier dans lequel il est creer est l'adresse du destinataire pour le moment)
      * et reenregistre les adresse mail dans le fichier d'adressesmail
      * si une nouvelle adresse a été ajoutermail
      */
     @FXML
     public void onSendClick() {
-        String nomFichier = "msg/" + txtSujet.getText() + ".txt";
-        Fichier fichier = new Fichier(nomFichier);
+        String adr = cbxAdrMail.getValue().toString().trim().replaceAll(" ", "_");
+        String chemin = String.format("msg/%s", adr).replaceAll(" ", "_");
+        String nomFichier = String.format("%s/%s.txt", chemin, txtSujet.getText().trim()).replaceAll(" ", "_");
+        Fichier fichier;
         String mess = "";
-        if (cbxAdrMail.getValue() != null
-                    && !cbxAdrMail.getValue().equals("")) {
-            if (!cbxAdrMail.getItems().contains(cbxAdrMail.getValue())) {
-                cbxAdrMail.getItems().add(cbxAdrMail.getValue());
-                enregistrerAdresses(cbxAdrMail.getItems(), "adressesmail.csv");
-            }
-
-            mess += String.format("to : %s%nfrom : %s%nSujet : %s%n%n%s",
-                    cbxAdrMail.getValue(),
-                    "you",
-                    txtSujet.getText(),
-                    txtMail.getText());
-            System.out.println(mess);
-            fichier.setContenu(mess);
-            JOptionPane.showMessageDialog(null,
-                    "mail envoyé a : " + cbxAdrMail.getValue(),
-                    "mail envoyé",
-                    JOptionPane.INFORMATION_MESSAGE);
+        mess += String.format(txtMail.getText());
+        if (!cbxAdrMail.getItems().contains(adr)) {
+            cbxAdrMail.getItems().add(adr);
+            enregistrerAdresses(cbxAdrMail.getItems(), "adressesmail.csv");
         }
+        try {
+
+            Path path = Paths.get(chemin);
+            Files.createDirectories(path);
+        } catch (Exception e) {
+            System.out.println(" probleme " + e.getCause());
+        }
+        fichier = new Fichier(nomFichier);
+        fichier.setContenu(mess);
+
+        JOptionPane.showMessageDialog(null,
+                "mail envoyé a : " + cbxAdrMail.getValue(),
+                "mail envoyé",
+                JOptionPane.INFORMATION_MESSAGE);
 
     }
 
