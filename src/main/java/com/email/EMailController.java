@@ -192,7 +192,6 @@ public class EMailController implements Initializable {
         btnSend.disableProperty().bind(txtMail.textProperty().isEmpty()
                                                .or(txtSujet.textProperty().isEmpty())
                                                .or(cbxAdrMail.valueProperty().isNull()));
-
     }
 
     @FXML
@@ -200,15 +199,15 @@ public class EMailController implements Initializable {
         try {
             FXMLLoader fxmlLoader
                     = new FXMLLoader(EMailApp.class.getResource("Param.fxml"));
-            Scene scene = null;
-            scene = new Scene(fxmlLoader.load(), 630, 150);
+            Scene scene = new Scene(fxmlLoader.load(), 630, 150);
+
             Stage stage = new Stage();
-            stage.setTitle("Paramètre");
+            stage.setTitle("Paramètres");
             stage.setScene(scene);
             stage.setResizable(false);
             stage.show();
         } catch (IOException e) {
-            System.out.println("Parametre introuvable !!!");
+            System.out.println("Paramètres introuvable !!!");
         }
     }
 }

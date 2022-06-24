@@ -11,3 +11,11 @@ w
 G.idea/sonarlint/issuestore/1/c/1c89a5491fbfda3fb050196d6a239f20200296e7,a\2\a23fecf281bfe300797f845cbd9ec9025ab4ec47
 w
 G.idea/sonarlint/issuestore/0/7/07b7bfcbe4a27e2783b05ea0caae034a6bc036ec,1\e\1e52cff19292deb96ede0e75bee3622d427c62d0
+_
+/src/main/java/outils/LecteurFichierAdresse.java,d\d\dd75c8bc041a54dbe84a31d3c699ce717977d88f
+U
+%src/main/java/com/email/EMailApp.java,0\e\0eaabf679b6e7a88d68ed6d8ed7465cf6bd1a5b5
+Q
+!src/main/java/outils/Fichier.java,f\0\f06810e239a7620369eebbd9bb907a176873fa83
+W
+'src/main/java/outils/ControlAction.java,b\6\b68741c61ae7201afb16beae83b0e47bd359acaf
